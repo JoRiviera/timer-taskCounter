@@ -1,0 +1,93 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raterhub Timesheet</title>
+</head>
+<body>
+
+    <p id="timer">00,00 minutes</p>
+    <p id="counter">0</p>
+    <div>
+        <button id="plus" onclick="plus()">+1</button>
+        <button onclick="minus()" id="minus">-1</button>
+    </div>
+    <div>
+        <button id="start" onclick="startTimer()">Start</button>
+        <button id="pause" onclick="pauseTimer()">Pause</button>
+        <button id="reset" onclick="resetTimer()">Reset</button>
+    </div>
+
+    <script>
+        /* COUNTER MANAGEMENT */
+        var counter = 0;
+    
+        function plus(){
+            counter++;
+            document.getElementById("counter").innerHTML = counter;
+        }
+    
+        function minus(){
+            if(counter > 0){
+                counter--;
+                document.getElementById("counter").innerHTML = counter;
+            }
+        }
+    
+        /* TIMER MANAGEMENT */
+        var startTime = 0;
+        var currentTimer = 0;
+        var interval = null;
+        const INTERVAL_MS = 1000;
+    
+        function startTimer(){
+            currentTimer = startTime;
+            interval = setInterval( updateTimer, INTERVAL_MS);
+        };
+        
+        function updateTimer(){
+                currentTimer += INTERVAL_MS;
+
+                document.getElementById("timer").innerHTML = Math.round(currentTimer/(10*60))/100 + " minutes";
+        };
+    
+        function pauseTimer(){
+            startTime = currentTimer;
+            clearInterval(interval);
+            interval = null;
+        };
+    
+        function resetTimer(){
+            if(interval !== null){
+                clearInterval(interval);
+                interval = null;
+            }
+            startTime = 0;
+            currentTimer = 0;
+            counter = 0;
+            document.getElementById("timer").innerHTML = "00,00 minutes";
+            document.getElementById("counter").innerHTML = 0;
+        };
+
+        /* KEYBOARD CONTROLS */
+
+        document.onkeypress= function(event){
+            var code = event.code;
+            switch(code){
+                case "Space" :
+                    if(interval !== null){ pauseTimer();}
+                    else{ startTimer();}
+                    break;
+                case "NumpadAdd" :
+                    plus();
+                    break;
+                case "NumpadSubtract" :
+                    minus();
+                    break;
+            }
+        }
+    </script>
+</body>
+</html>
